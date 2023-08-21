@@ -42,6 +42,18 @@ myDB(async client => {
      }
   );
 
+  app.route('/profile')
+    .get(ensureAuthenticated, (req, res) => {
+      res.render('profile');
+    });
+
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/');
+  }
+
   passport.use(new LocalStrategy((username, password, done) => {
     myDataBase.findOne({ username: username }, (err, user) => {
       console.log(`User ${username} attempted to log in.`);
