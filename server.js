@@ -32,7 +32,12 @@ myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   
   app.route('/').get((req, res) => {
-    res.render('index', { title: 'Connected to Database', message: 'Please login', showLogin: true });
+    res.render('index', {
+      title: 'Connected to Database',
+      message: 'Please login',
+      showLogin: true,
+      showRegistration: true
+    });
   });
 
   app.route('/login').post(
