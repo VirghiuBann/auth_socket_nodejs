@@ -38,13 +38,13 @@ myDB(async client => {
   app.route('/login').post(
     passport.authenticate('local', { failureRedirect: '/' }),
     (req, res) => {
-      res.render('profile');    
+      res.redirect('/profile');    
      }
   );
 
   app.route('/profile')
     .get(ensureAuthenticated, (req, res) => {
-      res.render('profile');
+      res.render('profile', {username: req.user.username});
     });
 
   function ensureAuthenticated(req, res, next) {
