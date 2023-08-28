@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 myDB(async client => {
-  const myDataBase = await client.db('database').collection('users');
+  const myDataBase = await client.db('advanced_node').collection('users');
   
   routes(app, myDataBase);
   auth(app, myDataBase);
