@@ -7,7 +7,8 @@ module.exports = (app, myDataBase) => {
       title: 'Connected to Database',
       message: 'Please login',
       showLogin: true,
-      showRegistration: true
+      showRegistration: true,
+      showSocialAuth: true
     });
   });
 
@@ -31,9 +32,31 @@ module.exports = (app, myDataBase) => {
     });
 
   app.route('/register')
-    .post((req, res, next) => {
+    .post(async (req, res, next) => {
       console.log(req.body);
       const hash = bcrypt.hashSync(req.body.password, 12);
+
+      // try {
+      //   const user = await myDataBase.findOne({ username: req.body.username });
+
+      //   if (user) {
+      //     res.redirect('/');
+      //   } else {
+      //     const result = await myDataBase.insertOne({
+      //       username: req.body.username,
+      //       password: hash
+      //     });
+
+      //     if (result) {
+      //       passport.authenticate('local', { failureRedirect: '/' });
+      //       res.redirect('/profile');
+      //     } else {
+      //        res.redirect('/');
+      //     }
+      //   }
+      // } catch (err) {
+      //   next(err);
+      // }
 
       myDataBase.findOne({ username: req.body.username }, (err, user) => {
         if (err) {
@@ -58,6 +81,15 @@ module.exports = (app, myDataBase) => {
         }
       );
     });
+  
+  
+  app.route('/auth/github').get(passport.authenticate('github'));
+  app.route('/auth/github/callback').get(
+    passport.authenticate('github', { failureRedirect: "/" }),
+    (req, res) => {
+      res.redirect('/profile');
+    }
+  );
   
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
